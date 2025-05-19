@@ -2,6 +2,8 @@
 #ifndef IOU_RSRC_H
 #define IOU_RSRC_H
 
+#include <linux/io_uring.h>
+
 #define IO_NODE_ALLOC_CACHE_MAX 32
 
 #define IO_RSRC_TAG_TABLE_SHIFT	(PAGE_SHIFT - 3)
@@ -45,6 +47,7 @@ struct io_rsrc_node {
 struct io_mapped_ubuf {
 	u64		ubuf;
 	u64		ubuf_end;
+	struct io_uring_dma_buf *iouring_dmabuf;
 	unsigned int	nr_bvecs;
 	unsigned long	acct_pages;
 	struct bio_vec	bvec[] __counted_by(nr_bvecs);
