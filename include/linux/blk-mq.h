@@ -1227,4 +1227,11 @@ static inline bool blk_req_can_dispatch_to_zone(struct request *rq)
 }
 #endif /* CONFIG_BLK_DEV_ZONED */
 
+static inline bool blk_rq_use_dmabuf(struct request *req)
+{
+	if (req->bio && req->bio->iouring_dmabuf)
+		return true;
+	return false;
+}
+
 #endif /* BLK_MQ_H */
