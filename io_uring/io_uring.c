@@ -3104,14 +3104,16 @@ void __io_uring_cancel(bool cancel_all)
 
 void io_uring_release_dmabuf(struct io_uring_dma_buf *uring_dmabuf)
 {
-	//unmap dma_buf dma_buf_unmap_attachment
-	dma_buf_unmap_attachment(uring_dmabuf->attach, uring_dmabuf->sgt, DMA_BIDIRECTIONAL);
+	if (uring_dmabuf->attach) {
+		//unmap dma_buf dma_buf_unmap_attachment
+		dma_buf_unmap_attachment(uring_dmabuf->attach, uring_dmabuf->sgt, DMA_BIDIRECTIONAL);
 
-	// detach dma_buf
-	dma_buf_detach(uring_dmabuf->attach->dmabuf, uring_dmabuf->attach);
+		// detach dma_buf
+		dma_buf_detach(uring_dmabuf->attach->dmabuf, uring_dmabuf->attach);
 
-	// put dma_buf
-	dma_buf_put(uring_dmabuf->attach->dmabuf);
+		// put dma_buf
+		dma_buf_put(uring_dmabuf->attach->dmabuf);
+	}
 
 	// free
 	kfree(uring_dmabuf);
