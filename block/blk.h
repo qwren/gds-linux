@@ -351,8 +351,8 @@ static inline bool bio_may_exceed_limits(struct bio *bio,
 	 * to the performance impact of cloned bios themselves the loop below
 	 * doesn't matter anyway.
 	 */
-	return lim->chunk_sectors || bio->bi_vcnt != 1 ||
-		bio->bi_io_vec->bv_len + bio->bi_io_vec->bv_offset > PAGE_SIZE;
+	return (!bio->iouring_dmabuf) && (lim->chunk_sectors || bio->bi_vcnt != 1 ||
+		bio->bi_io_vec->bv_len + bio->bi_io_vec->bv_offset > PAGE_SIZE);
 }
 
 struct bio *__bio_split_to_limits(struct bio *bio,
