@@ -287,6 +287,8 @@ void bio_init(struct bio *bio, struct bio_vec *table,
 	bio->bi_max_vecs = max_vecs;
 	bio->bi_io_vec = table;
 	bio->bi_pool = NULL;
+	bio->dmabuf_offset = 0;
+	bio->iouring_dmabuf = NULL;
 }
 EXPORT_SYMBOL(bio_init);
 
@@ -1090,6 +1092,7 @@ void bio_iov_bvec_set(struct bio *bio, struct iov_iter *iter)
 	bio->bi_iter.bi_size = size;
 	bio_set_flag(bio, BIO_NO_PAGE_REF);
 	bio_set_flag(bio, BIO_CLONED);
+	bio->iouring_dmabuf = iter->iouring_dmabuf;
 }
 
 static void bio_put_pages(struct page **pages, size_t size, size_t off)
@@ -1546,6 +1549,12 @@ struct bio *bio_split(struct bio *bio, int sectors,
 		return NULL;
 
 	split->bi_iter.bi_size = sectors << 9;
+
+	if (bio->iouring_dmabuf) {
+		split->iouring_dmabuf = bio->iouring_dmabuf;
+		split->dmabuf_offset = bio->dmabuf_offset;
+		bio->dmabuf_offset += sectors << 9;
+	}
 
 	if (bio_integrity(split))
 		bio_integrity_trim(split);

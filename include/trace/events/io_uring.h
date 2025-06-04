@@ -541,8 +541,8 @@ TRACE_EVENT(io_uring_req_failed,
 		__entry->buf_index	= sqe->buf_index;
 		__entry->personality	= sqe->personality;
 		__entry->file_index	= sqe->file_index;
-		__entry->pad1		= sqe->__pad2[0];
-		__entry->pad2		= sqe->__pad2[1];
+		__entry->pad1		= sqe->__pad;
+		__entry->pad2		= sqe->__pad2;
 		__entry->error		= error;
 	),
 

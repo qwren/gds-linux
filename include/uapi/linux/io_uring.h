@@ -59,8 +59,11 @@ struct io_uring_sqe {
 	union {
 		__s32	splice_fd_in;
 		__u32	file_index;
+		__u32   dmabuf_offset;
 	};
-	__u64	__pad2[2];
+	__s32   fd_dma_buf;   /* dma_buf fd */
+	__u32   __pad;
+	__u64	__pad2;
 };
 
 enum {
@@ -143,6 +146,8 @@ enum {
 	IORING_OP_MKDIRAT,
 	IORING_OP_SYMLINKAT,
 	IORING_OP_LINKAT,
+	IORING_OP_READ_DMA,
+	IORING_OP_WRITE_DMA,
 
 	/* this goes last, obviously */
 	IORING_OP_LAST,

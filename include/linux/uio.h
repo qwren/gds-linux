@@ -55,6 +55,7 @@ struct iov_iter {
 		};
 		loff_t xarray_start;
 	};
+	struct io_uring_dma_buf *iouring_dmabuf;
 };
 
 static inline enum iter_type iov_iter_type(const struct iov_iter *i)
